@@ -1,0 +1,1506 @@
+<!-- ================================================================
+  NMIXX EPISODE 1 : ZERO FRONTIER
+  台灣場演唱會應援練習頁面
+
+  如需更新應援法，請修改 <script> 最上方的 CHEER_DATA 物件。
+  如需嵌入 YouTube 影片，請在 SONGS 對應歌曲加入 youtube: 'VIDEO_ID'。
+================================================================ -->
+
+<style>
+.mixx-container *,
+.mixx-container *::before,
+.mixx-container *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.mixx-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.mixx-notice {
+  font-size: 12px;
+  color: #999;
+  padding: 8px 12px;
+  background: #fafafa;
+  border: 1px solid #ebebeb;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.mixx-wrap {
+  display: flex;
+  height: 90vh;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ==============================
+   LEFT SIDEBAR  (flex: 1 → ~33%)
+============================== */
+.mixx-sidebar {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.mixx-sidebar-header {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid #ebebeb;
+  flex-shrink: 0;
+}
+
+.mixx-tour-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+.mixx-tour-sub {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+.mixx-toggle {
+  display: none;
+  width: 100%;
+  padding: 11px 18px;
+  background: #fafafa;
+  border: none;
+  border-bottom: 1px solid #ebebeb;
+  font-family: inherit;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mixx-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0 16px;
+}
+
+.mixx-section-label {
+  padding: 14px 18px 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #ccc;
+}
+
+.mixx-song-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 15px;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+.mixx-song-row:hover {
+  background: #f7f7f7;
+}
+
+.mixx-song-row.mixx-active {
+  border-left-color: #93D2F3;
+  background: #f0f8ff;
+}
+
+.mixx-song-num {
+  font-size: 12px;
+  color: #ccc;
+  width: 24px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.mixx-song-name {
+  flex: 1;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mixx-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.mixx-tag-cheer {
+  background: #eaf6ff;
+  color: #3eaad4;
+  border: 1px solid #b5dff5;
+}
+
+.mixx-tag-enjoy {
+  background: #f5f5f5;
+  color: #aaa;
+  border: 1px solid #e0e0e0;
+}
+
+.mixx-tag-encore {
+  background: #fffdf0;
+  color: #c8920a;
+  border: 1px solid #ecd06a;
+}
+
+/* ==============================
+   RIGHT PANEL  (flex: 3 → ~75%)
+============================== */
+.mixx-panel {
+  flex: 3;
+  overflow-y: auto;
+  padding: 28px 36px;
+}
+
+.mixx-empty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 15px;
+}
+
+.mixx-panel-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 10px;
+}
+
+.mixx-panel-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.mixx-panel-num {
+  font-size: 13px;
+  color: #bbb;
+}
+
+/* ==============================
+   YOUTUBE EMBED
+============================== */
+.mixx-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 52vh;
+  background: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 auto 20px;
+}
+
+.mixx-video-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.mixx-video-ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #ccc;
+  font-size: 13px;
+  border: 1px dashed #ddd;
+  border-radius: 6px;
+}
+
+.mixx-video-ph-icon {
+  font-size: 28px;
+}
+
+/* ==============================
+   NO-CHEER MESSAGE
+============================== */
+.mixx-no-cheer-box {
+  text-align: center;
+  color: #bbb;
+  padding: 16px 0 8px;
+}
+
+.mixx-no-cheer-icon {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.mixx-no-cheer-text {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* ==============================
+   CHEER CONTENT
+============================== */
+.mixx-cheer-section {
+  margin-bottom: 28px;
+}
+
+.mixx-cheer-section-lbl {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: #93D2F3;
+  margin-bottom: 10px;
+}
+
+.mixx-cheer-line {
+  font-size: 16px;
+  line-height: 2;
+  color: #444;
+}
+
+.mixx-cheer-line.is-cheer {
+  color: #93D2F3;
+  font-weight: 700;
+}
+
+.mixx-cheer-line .mixx-b {
+  color: #93D2F3;
+  font-weight: 700;
+}
+
+/* ==============================
+   IMAGE EMBED
+============================== */
+.mixx-image-wrap {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 auto 20px;
+}
+
+.mixx-image-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==============================
+   MOBILE (≤768px)
+============================== */
+@media (max-width: 768px) {
+  .mixx-wrap {
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+  }
+
+  .mixx-sidebar {
+    flex: none;
+    width: 100%;
+    min-width: unset;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    overflow: visible;
+  }
+
+  .mixx-toggle {
+    display: block;
+  }
+
+  .mixx-list {
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+    flex: none;
+  }
+
+  .mixx-list.open {
+    display: block;
+  }
+
+  .mixx-panel {
+    flex: none;
+    min-height: auto;
+    padding: 20px 16px;
+  }
+
+  .mixx-panel-title {
+    font-size: 22px;
+  }
+
+  .mixx-empty {
+    height: 40vh;
+  }
+}
+</style>
+
+<div class="mixx-container">
+  <p class="mixx-notice">※ 以首爾場為參考，台灣場實際曲目可能調整，請留意更新</p>
+  <div class="mixx-wrap">
+    <aside class="mixx-sidebar">
+      <div class="mixx-sidebar-header">
+        <div class="mixx-tour-name">EPISODE 1 : ZERO FRONTIER</div>
+        <div class="mixx-tour-sub">演唱會 歌單 · 應援練習</div>
+      </div>
+      <button class="mixx-toggle" id="mixxToggle">▾ 展開歌單</button>
+      <div class="mixx-list" id="mixxList"></div>
+    </aside>
+    <main class="mixx-panel" id="mixxPanel">
+      <div class="mixx-empty">← 點選一首歌開始練習</div>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+
+  /* ============================================================
+     應援法資料（待填入）
+
+     格式說明：每首歌一個 key，直接放 lines 陣列。
+     三種行：
+       { text: '黑色歌詞',   cheer: false }   ← 普通歌詞
+       { text: '【藍色喊點】', cheer: true  }   ← 整行藍色粗體
+       { text: '歌詞 <span class="mixx-b">部分藍</span> 繼續', html: true }  ← 行內混色
+  ============================================================ */
+  var CHEER_DATA = {
+    'O.O': { lines: [
+      { text: '< 影片 2:25 開始 >', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin】', cheer: true },
+      { text: '【NMIXX Set go!】', cheer: true },
+      { text: 'WhOOk, whOOk, ayy, lOOk at that moving eye, eyes', cheer: false },
+      { text: '<span class="mixx-b">【봤니?NMIXX】</span>（空耳：鋪阿膩 NMIXX）', html: true },
+      { text: '봤니? ShOOg, shOOg, shOOg', cheer: false },
+      { text: 'HOOk, 들어와 내게 좀 더, <span class="mixx-b">좋아</span>（空耳：秋哇）', html: true },
+      { text: 'zOOm-zOOm, good', cheer: true },
+      { text: 'Get out, 겁쟁인 XX, 충격과 공포일걸, <span class="mixx-b">OOps</span>', html: true },
+      { text: "Gon' poppin' it, poppin' it, poppin' it now", cheer: false },
+      { text: '궁금해 미치겠지, open that, boom <span class="mixx-b">【BOOM】</span>', html: true },
+      { text: 'Check out, popcorn, and Zero Coke', cheer: false },
+      { text: '빠진 건 없지? <span class="mixx-b">Come in</span>, 팔짱을 끼고, sit down', html: true },
+      { text: '곧 터지는 탄성 <span class="mixx-b">【Ohhh】</span>', html: true },
+      { text: '아직까진 teaser', cheer: false },
+      { text: 'HOOt, 기대해, <span class="mixx-b">coming sOOn</span>', html: true },
+      { text: '벌써 놀라지 마, calm <span class="mixx-b">down, down, down</span>', html: true },
+      { text: '단다라-단다라-단 <span class="mixx-b">(지금 시작해)</span>（空耳：七根 西家K）', html: true },
+      { text: '단다라-단다라-단 <span class="mixx-b">(sorry, no way out)</span>', html: true },
+      { text: '기다려봐 잠깐, oh, tension 을 더 높여, 더 높여, leggo', cheer: false },
+      { text: '두 눈이 커져 like <span class="mixx-b">OO</span>', html: true },
+      { text: 'Watch out, baila, baila, baila', cheer: false },
+      { text: 'watch it, how nice, how nice <span class="mixx-b">(OO)</span>', html: true },
+      { text: 'Watch out, baila, baila, baila', cheer: false },
+      { text: 'watch it, how nice, how nice <span class="mixx-b">(OO)</span>', html: true },
+      { text: 'Come on, 한 방울 떨어뜨릴 때야 eye drops', cheer: false },
+      { text: 'Watch out, baila, baila, baila', cheer: false },
+      { text: 'watch it, how nice, how nice', cheer: false },
+      { text: 'NMIXX', cheer: true },
+      { text: '영과 일의 미로가 보여? (-가 보여)', cheer: false },
+      { text: '보고 있지만 말고 follow', cheer: false },
+      { text: "'Cause everything is fake, but I ain't a fake", cheer: false },
+      { text: '진짜 시작은 지금부터', cheer: false },
+      { text: '(빰, 빰, 빰) see <span class="mixx-b">more, more, more</span>', html: true },
+      { text: '(빰, 빰, 빰) scream <span class="mixx-b">O, O, O</span>', html: true },
+      { text: '현실 같은 dream 은 이제 지겹지 않니?', cheer: false },
+      { text: '잠든 너를, <span class="mixx-b">tap-tap</span>, 깨워, <span class="mixx-b">knock-knock</span>', html: true },
+      { text: '어서 button 을 더, <span class="mixx-b">tap-tap</span>, 눌러<span class="mixx-b">봐봐</span>, follow, follow me', html: true },
+      { text: 'Never let you down, be with me', cheer: false },
+      { text: 'Let me be your <span class="mixx-b">superhero</span>', html: true },
+      { text: 'Ayy, zip-zap, zOOm, come on, come on', cheer: false },
+      { text: '날 꼭 <span class="mixx-b">잡아, 잡아</span> (just here we go)', html: true },
+      { text: 'No, 무서워할 거 없어, <span class="mixx-b">never give up</span>', html: true },
+      { text: 'Baby, 너와 나를 믿어', cheer: false },
+      { text: 'Zero plus zero equals infinity', cheer: false },
+      { text: 'Oh, 재밌지 않니? <span class="mixx-b">【Yes!】</span>', html: true },
+      { text: 'Ayy, zip-zip, zOOm, come on, come on', cheer: false },
+      { text: "Baby, you're my superhero", cheer: false },
+      { text: '【歡呼】', cheer: true },
+      { text: '너무 늦기 전에 try', cheer: false },
+      { text: "Baby, what you waitin' for?", cheer: false },
+      { text: "'Cause now is the time", cheer: false },
+      { text: 'And finally, <span class="mixx-b">we\'ll win</span>', html: true },
+      { text: 'Watch out, baila, baila, baila', cheer: false },
+      { text: 'watch it, how nice, how nice <span class="mixx-b">(OO)</span>', html: true },
+      { text: 'Watch out, baila, baila, baila', cheer: false },
+      { text: 'watch it, how nice, how nice <span class="mixx-b">(OO)</span>', html: true },
+      { text: 'Come on, 눈을 깜빡일 시간이야, baby', cheer: false },
+      { text: 'Watch out, baila, baila, baila', cheer: false },
+      { text: 'watch it, how nice, how nice <span class="mixx-b">(like OO)</span>', html: true },
+      { text: '어때? (OO) 어때? (OO) 어때? (OO)', cheer: false },
+      { text: '<span class="mixx-b">좋아</span> (ㅇㅇ), <span class="mixx-b">좋아</span> (ㅇㅇ), <span class="mixx-b">좋아 (ㅇㅇ)</span> （空耳：秋哇）', html: true },
+      { text: 'Oh, my, 떨어진 멘탈은 챙겨가, baby', cheer: false },
+      { text: 'Watch out, baila, baila, baila, 어서 follow, follow', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX, OO】', cheer: true },
+      { text: 'Hey-yeah-yeah, hey-yeah-yeah', cheer: false },
+      { text: 'Oh, no, yeah', cheer: false },
+      { text: '【歡呼】', cheer: true },
+    ]},
+    'Run For Roses': { lines: [
+      { text: "We're alive 'cause we are not alone", cheer: false },
+      { text: '【NMIXX】', cheer: true },
+      { text: "Hand to hand, you know we won't let go", cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: '【Lily, Oh Hae Won, Sull Yoon Ah, Bae Jin Sol, Kim Ji Woo, Jang Kyu Jin, Run For Roses】', cheer: true },
+      { text: 'Yeah, yeah, ayy-yeah', cheer: false },
+      { text: '불가능에 도전을, yeah, we fight back', cheer: false },
+      { text: '불안한 현실에 던진 invitation', cheer: false },
+      { text: "불만 가득한 표정으로 we're back", cheer: false },
+      { text: '불같이 타오를게 no limitation', cheer: false },
+      { text: 'Blow, 맘을 휩쓸어, we gotta go', cheer: false },
+      { text: '만개하는 our synergy', cheer: false },
+      { text: '너와 내 낭만들을 잃지 않게', cheer: false },
+      { text: "Let's run", cheer: false },
+      { text: 'Run', cheer: false },
+      { text: '꿈꿔온 united, wanna get it, wanna fight it', cheer: false },
+      { text: 'Wanna stand up and salute', cheer: false },
+      { text: '<span class="mixx-b">(Roses)</span> 지겨운 절망을 넘어 꿈을 거머쥐어', html: true },
+      { text: 'Gonna make us move', cheer: false },
+      { text: "We're alive 'cause we are not alone", cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'Hand to hand, 두 발을 맞추고', cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'Our hearts go "Da-ram, dam"', cheer: false },
+      { text: '우린 달려가길 원해', cheer: false },
+      { text: "We're alive 'cause we are not alone", cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'Oh, 속도를 높여, oh (eh, yeah), 목소릴 높여', cheer: false },
+      { text: '가시덩굴에 둘러싸인 our finish line', cheer: false },
+      { text: '그래도 난 가 <span class="mixx-b">【난 가】</span>（空耳：南卡）', html: true },
+      { text: '긁히고 다쳐도 포기는 치워둬', cheer: false },
+      { text: 'No, no, no, no, no, no, no', cheer: false },
+      { text: 'Run', cheer: false },
+      { text: '꿈꿔온 united, wanna get it, wanna fight it', cheer: false },
+      { text: 'Wanna stand up and salute (salute, girl)', cheer: false },
+      { text: '<span class="mixx-b">(Roses)</span> 지겨운 절망을 (let\'s go) 넘어 꿈을 거머쥐어', html: true },
+      { text: 'Gonna make us move', cheer: false },
+      { text: "We're alive 'cause we are not alone", cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'Hand to hand, 두 발을 맞추고', cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'Our hearts go "Da-ram, dam"', cheer: false },
+      { text: '우린 달려가길 원해', cheer: false },
+      { text: "We're alive 'cause we are not alone", cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di-dum-dum, dum-dum', cheer: false },
+      { text: '(Ooh) da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di-dum-dum, dum-dum', cheer: false },
+      { text: 'da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di-dum-dum, dum-dum', cheer: false },
+      { text: '(Ooh) da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di, <span class="mixx-b">run for roses</span>', html: true },
+      { text: 'Gonna live our best life, we be in the good vibe', cheer: false },
+      { text: "If you get this close, don't lose it", cheer: false },
+      { text: '지속된 고요에 올리는 방아쇠', cheer: false },
+      { text: '당기는 소리에 start it <span class="mixx-b">(run)</span>', html: true },
+      { text: 'Ru-ru-run for roses <span class="mixx-b">(roses)</span>', html: true },
+      { text: 'Ru-ru-run for roses <span class="mixx-b">(run)</span>', html: true },
+      { text: 'Ru-ru-run for roses <span class="mixx-b">(roses)</span>', html: true },
+      { text: 'Ru-ru-run for roses, yeah, whoa', cheer: false },
+      { text: "We're alive 'cause we are not alone (we're not, we're not, we're not alone)", cheer: false },
+      { text: '<span class="mixx-b">Run for roses</span> (whoa, yeah)', html: true },
+      { text: 'Hand to hand, 두 발을 맞추고 (맞추고)', cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'Our hearts go "Da-ram, dam"', cheer: false },
+      { text: '우린 달려가 길 원해 (oh, yeah, yeah, ah-ooh)', cheer: false },
+      { text: "We're alive 'cause we are not alone", cheer: false },
+      { text: 'Run for roses', cheer: true },
+      { text: 'da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di-dum-dum, dum-dum (yeah, yeah, yeah)', cheer: false },
+      { text: "(Ooh, oh) da-di, da-di, da-di, dum (better wait, you'll know)", cheer: false },
+      { text: "Da-di, da-di, da-di-dum-dum, dum-dum ('cause we are not alone)", cheer: false },
+      { text: 'da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di-dum-dum, dum-dum (ah-ooh)', cheer: false },
+      { text: '(Ooh) da-di, da-di, da-di, dum', cheer: false },
+      { text: 'Da-di, da-di, da-di, <span class="mixx-b">run for roses</span>', html: true },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+    'Soñar (Breaker)': { lines: [
+      { text: '【Lily, Oh Hae Won, Sull Yoon Ah, Bae Jin Sol, Kim Ji Woo, Jang Kyu Jin, NMIXX】', cheer: true },
+      { text: '하얀 구름은 내 dream car', cheer: false },
+      { text: '저기 붉은 달은 hometown', cheer: false },
+      { text: '남달라 우리의 blood type', cheer: false },
+      { text: '공상 가득한 our life', cheer: false },
+      { text: '쏟아진 shooting star', cheer: false },
+      { text: '궤도를 벗어나 볼까', cheer: false },
+      { text: '꿈꿔온 방향대로', cheer: false },
+      { text: '우릴 맡겨볼 time, yuh', cheer: false },
+      { text: 'Wa-ya-ya-ya, <span class="mixx-b">drop it</span>', html: true },
+      { text: 'We don\'t wanna <span class="mixx-b">stop it</span>', html: true },
+      { text: '하늘 위로 닻을 던져봐 Ooh-whoa', cheer: false },
+      { text: '한 발만 내디뎌', cheer: false },
+      { text: '꿈속 가는 wormhole', cheer: false },
+      { text: 'Wa-ya-ya-ya, so fast', cheer: false },
+      { text: '꽉 붙잡아 <span class="mixx-b">just like that</span>', html: true },
+      { text: 'Come a so-soñar', cheer: false },
+      { text: 'A soñar, a soñar, <span class="mixx-b">ayy</span>', html: true },
+      { text: 'Come a so-soñar, a so', cheer: false },
+      { text: 'No need to worry', cheer: false },
+      { text: 'Come a so-soñar', cheer: false },
+      { text: 'A soñar, a soñar, <span class="mixx-b">ayy</span>', html: true },
+      { text: 'Come a so-soñar, a so', cheer: false },
+      { text: 'Change up!', cheer: true },
+      { text: '구름 뒤 숨은 꿈의 island', cheer: false },
+      { text: "Don't wanna see it?", cheer: false },
+      { text: "Don't you wanna see it? Babe", cheer: false },
+      { text: 'Do you like it? I like, like it, yeah', cheer: false },
+      { text: "Don't wanna feel it?", cheer: false },
+      { text: "Don't you wanna feel it? Babe", cheer: false },
+      { text: 'NMIXX!', cheer: true },
+      { text: '난 안 해 <span class="mixx-b">bypass</span>', html: true },
+      { text: '앞을 막는 골리앗 just <span class="mixx-b">go straight</span>', html: true },
+      { text: '필요 없어 <span class="mixx-b">방패</span>', html: true },
+      { text: '세상은 egg 강한 바위가 <span class="mixx-b">my name</span>', html: true },
+      { text: '동화 속에 잠든 princess, not me', cheer: false },
+      { text: '우리 우리다운 groove로 jumping, <span class="mixx-b">whoa</span>', html: true },
+      { text: '새로운 결말을 make it', cheer: false },
+      { text: "We're breaker and changer", cheer: false },
+      { text: 'Wa ya-ya-ya, <span class="mixx-b">drop it</span>', html: true },
+      { text: 'We don\'t wanna <span class="mixx-b">stop it</span>', html: true },
+      { text: '하늘 위로 닻을 던져봐 Ooh-whoa', cheer: false },
+      { text: '한 발만 내디뎌', cheer: false },
+      { text: '꿈속 가는 wormhole', cheer: false },
+      { text: 'Wa-ya-ya-ya, so fast', cheer: false },
+      { text: '꽉 붙잡아 <span class="mixx-b">just like that</span>', html: true },
+      { text: 'Come a so-soñar', cheer: false },
+      { text: 'A soñar, a soñar, <span class="mixx-b">ayy</span>', html: true },
+      { text: 'Come a so-soñar, a so', cheer: false },
+      { text: 'No need to worry', cheer: false },
+      { text: 'Come a so-soñar', cheer: false },
+      { text: 'A soñar, a soñar, <span class="mixx-b">ayy</span>', html: true },
+      { text: 'Come a so-soñar, a so', cheer: false },
+      { text: '시작해 come with me', cheer: false },
+      { text: '끝도 없는 상상 위로 let me dive', cheer: false },
+      { text: "Pwah, puttin' it up, pwah, puttin' it up", cheer: false },
+      { text: 'Be original thing', cheer: false },
+      { text: '매일 더 상상해', cheer: false },
+      { text: 'I still dream it and I love that', cheer: false },
+      { text: 'Ooh, <span class="mixx-b">like it</span> (eh-eh)', html: true },
+      { text: '망설임을 twist it like this', cheer: false },
+      { text: 'Ooh (eh) <span class="mixx-b">like it</span>', html: true },
+      { text: 'Get it loud', cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+      { text: 'Come a so-soñar (Come a so-soñar)', cheer: false },
+      { text: 'A soñar, a soñar, <span class="mixx-b">ayy</span>', html: true },
+      { text: 'Come a so-soñar, a so', cheer: false },
+      { text: 'No need to worry', cheer: false },
+      { text: 'Come a so-soñar', cheer: false },
+      { text: 'A soñar, a soñar, <span class="mixx-b">ayy</span>', html: true },
+      { text: 'Come a so-soñar, a so (oh, yeah, yeah)', cheer: false },
+      { text: 'Ooh, <span class="mixx-b">like it</span> (eh-eh)', html: true },
+      { text: '망설임을 twist it like this', cheer: false },
+      { text: 'Ooh (eh) <span class="mixx-b">like it</span>', html: true },
+      { text: 'Get it loud', cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+    'See that?': { lines: [
+      { text: '< 影片 0:35 開始 >', cheer: false },
+      { text: 'Ooh-ah <span class="mixx-b">【NMIXX】</span>', html: true },
+      { text: "Don't mind, just do it, yeah, yeah", cheer: false },
+      { text: '【별별별!Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin】', cheer: true },
+      { text: "Don't mind, just do it (whoa-oh-oh-oh-oh-oh)", cheer: false },
+      { text: 'Can you feel the tension?', cheer: false },
+      { text: '【NMIXX!별별별!】', cheer: true },
+      { text: '(Whoa-oh-oh-oh-oh-oh) yeah', cheer: false },
+      { text: 'No, I don\'t mind, 깨진 손톱 위에 검은 매니큐어 칠 <span class="mixx-b">(doesn\'t matter)</span>', html: true },
+      { text: '난 헝클어진 머리칼을 풀듯 이어폰 줄을 풀지', cheer: false },
+      { text: "I'm a boss, turn the radio on,", cheer: false },
+      { text: '튀어올라 난, glow in the dark', cheer: false },
+      { text: 'Who cares? Not your stereotype', cheer: false },
+      { text: '부숴, 네가 알던 날', cheer: false },
+      { text: '아침 해가 뜨고 우린 숨었지', cheer: false },
+      { text: '(내리쬐는 <span class="mixx-b">sunshine, shine, shine</span>)', html: true },
+      { text: '모두 우릴 보고 혀를 차겠지', cheer: false },
+      { text: '(혀를 차네, 음)', cheer: false },
+      { text: 'Woah, 요즘에는 <span class="mixx-b">별별별</span> (See that?)', html: true },
+      { text: '이런저런 <span class="mixx-b">별별별</span>', html: true },
+      { text: '하여튼간 별별 (twinkle little, little star)', cheer: false },
+      { text: '그래, 난 <span class="mixx-b">별별별</span> (whoa)', html: true },
+      { text: '우린 위-위-위-위-위로, <span class="mixx-b">위로 더</span>（空耳：we嘍頭）', html: true },
+      { text: '우린 위-위-위-위-위로, <span class="mixx-b">위로 더</span>（空耳：we嘍頭）', html: true },
+      { text: "I'ma be-be-be-be-be the, be the one", cheer: false },
+      { text: '여기, 여기 붙어라 (whoa)', cheer: false },
+      { text: 'NMIXX, <span class="mixx-b">we get it on now</span>', html: true },
+      { text: 'Nah, 주어진 건 싫어 <span class="mixx-b">(no, thank you)</span>', html: true },
+      { text: '네모 박스를 지워 <span class="mixx-b">(no, thank you)</span>', html: true },
+      { text: '날 자연스레 둘래? 청개구리, 두더지 (oh)', cheer: false },
+      { text: 'Come follow me (yeah), this is the day', cheer: false },
+      { text: 'Who cares? 좀 튀어도 (별)', cheer: false },
+      { text: 'Who cares? 난 나일 뿐 (음)', cheer: false },
+      { text: '넘어져도 난 무릎을 털고, go for the goal', cheer: false },
+      { text: '전부 비켜줘, yo, 음, 하여튼간', cheer: false },
+      { text: 'Woah, 요즘에는 <span class="mixx-b">별별별</span> (See that?)', html: true },
+      { text: '이런저런 <span class="mixx-b">별별별</span>', html: true },
+      { text: '하여튼간 별별 (twinkle little, little star)', cheer: false },
+      { text: '그래, 난 <span class="mixx-b">별별별</span> (whoa)', html: true },
+      { text: '우린 위-위-위-위-위로, <span class="mixx-b">위로 더</span>（空耳：we嘍頭）', html: true },
+      { text: '우린 위-위-위-위-위로, <span class="mixx-b">위로 더</span>（空耳：we嘍頭）', html: true },
+      { text: "I'ma be-be-be-be-be the, be the one", cheer: false },
+      { text: '여기, 여기 붙어라 (whoa)', cheer: false },
+      { text: 'Whoa, ooh-whoa, ooh-whoa, ooh-whoa <span class="mixx-b">【NMIXX】</span>(don\'t mind, just do it)', html: true },
+      { text: 'Stay awake, you cannot hold us down <span class="mixx-b">【별별별】</span>(don\'t mind, just do it)', html: true },
+      { text: 'Whoa, ooh-whoa, ooh-whoa, ooh-whoa <span class="mixx-b">【NMIXX】</span>(don\'t mind, just do it)', html: true },
+      { text: 'Fly away, 저 하늘로 날아,<span class="mixx-b">【별별별】</span> (I\'ma tell \'em)', html: true },
+      { text: '다같이 stomp the ground', cheer: false },
+      { text: '마음 안의 말 털어내 voice up (voice up, yeah)', cheer: false },
+      { text: "(Whoa-oh-oh) we're never ever going back", cheer: false },
+      { text: 'Deep and deeper, 조금씩, uh, 하여튼간', cheer: false },
+      { text: 'Woah, 요즘에는 <span class="mixx-b">별별별</span> (See that?)', html: true },
+      { text: '이런저런 <span class="mixx-b">별별별</span>', html: true },
+      { text: '하여튼간 별별 (twinkle little, little star)', cheer: false },
+      { text: '그래, 난 <span class="mixx-b">별별별</span> (whoa)', html: true },
+      { text: '우린 위-위-위-위-위로, <span class="mixx-b">위로 더</span>（空耳：we嘍頭）', html: true },
+      { text: '우린 위-위-위-위-위로, <span class="mixx-b">위로 더</span>（空耳：we嘍頭）', html: true },
+      { text: "I'ma be-be-be-be-be the, be the one", cheer: false },
+      { text: '여기, 여기 붙어라 (whoa)', cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+    'DASH': { lines: [
+      { text: '< 影片 0:36 開始 >', cheer: false },
+      { text: 'Dash, I wanna dash, I wanna run it, run it', cheer: false },
+      { text: 'Dash, I wanna dash, I wanna run it, run it', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX】', cheer: true },
+      { text: 'Dash, I wanna dash, I wanna run it, run it', cheer: false },
+      { text: 'Dash, mmm-ah, run it', cheer: false },
+      { text: 'You can call me reckless (zig-zag)', cheer: false },
+      { text: '겁 없이 던진 road map (zig-zag)', cheer: false },
+      { text: '날 막아선 barricade', cheer: false },
+      { text: '사뿐히 즈려밟고 가 <span class="mixx-b">(we ride, we ride)</span>', html: true },
+      { text: '깜빡여 red light in the dark', cheer: false },
+      { text: '이건 멈추란 경고일지 몰라', cheer: false },
+      { text: "But I don't wanna stop it (hmm)", cheer: false },
+      { text: '고민 따윈 crash it (ooh, yeah)', cheer: false },
+      { text: '떨리는 stars, 난 달려가', cheer: false },
+      { text: '저 멀리 펼쳐진 거친 road, 가본 적 없는 길을 밟아', cheer: false },
+      { text: '끌어올려 무한대로, 발 닿는 곳이 runway', cheer: false },
+      { text: '세상이 원한 길과 정반대로 ride, we go zero to a hunnid', cheer: false },
+      { text: 'I wanna <span class="mixx-b">dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: 'Dash, mmm-ah, run it, I wanna run it, run it', cheer: false },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it (dash)', html: true },
+      { text: 'Ooh, ooh-ooh, speed up to the max', cheer: false },
+      { text: 'Ooh, ooh-ooh, 심장은 beating fast', cheer: false },
+      { text: 'Ooh, ooh-ooh, 꿈꿔왔던 way', cheer: false },
+      { text: 'Dash, I wanna dash, I wanna run it, run it', cheer: false },
+      { text: 'NMIXX!', cheer: true },
+      { text: '언제나 옆자리는 비워놔 <span class="mixx-b">【비워놔】</span>（空耳：匹窩ㄋㄨㄚ）', html: true },
+      { text: '누구든 원한다면 올라타 <span class="mixx-b">【올라타】</span>（空耳：歐拉他）', html: true },
+      { text: '지나간 자리에 남겨봐 skid mark', cheer: false },
+      { text: '앞을 막는 건 모조리 다 bump', cheer: false },
+      { text: '끌어올려 무한대로, 발 닿는 그곳이 runway', cheer: false },
+      { text: '시작해 revolution for evolution, we go zero to a hunnid', cheer: false },
+      { text: 'I wanna <span class="mixx-b">dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it', html: true },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: 'Dash, mmm-ah, run it, I wanna run it, run it', cheer: false },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: '또다시 한번 breathe', cheer: false },
+      { text: 'Never stop, never stop, never stop', cheer: true },
+      { text: '거친 박동은 danger', cheer: false },
+      { text: 'But take it to the max', cheer: false },
+      { text: 'Hold me tight, hold me tight, hold me tight', cheer: true },
+      { text: '겁낼 것 없이 come in', cheer: false },
+      { text: 'NMIXX, <span class="mixx-b">change up!</span>', html: true },
+      { text: '아득히 저 멀리 펼쳐지는 days', cheer: false },
+      { text: 'Yeah, we get it (yah), we face it (yah)', cheer: false },
+      { text: '이 항해의 키를 잡아', cheer: false },
+      { text: '세상에 신호탄을 쏘아 올려 bang', cheer: false },
+      { text: '뛰는 심장 소릴 따라오면 돼', cheer: false },
+      { text: '멈추지는 마, 망설이지 마, no matter', cheer: false },
+      { text: 'Mmm, I just wanna continue my pace <span class="mixx-b">【HA!】</span>', html: true },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: 'Dash, mmm-ah, run it, I wanna run some more', cheer: false },
+      { text: '(Yeah, make a dash, hey) I wanna run it, run it', cheer: false },
+      { text: '<span class="mixx-b">Dash</span>, I wanna <span class="mixx-b">dash</span>, I wanna run it, run it', html: true },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+    'Young, Dumb, Stupid': { lines: [
+      { text: '< 影片 14:05 開始 >', cheer: false },
+      { text: '【Young Dumb Stupid NMIXX!】', cheer: true },
+      { text: 'Turn it, turn it up, bang, can you hear that right now?<span class="mixx-b">【right now】</span>', html: true },
+      { text: '심장 소린 터져, get loud <span class="mixx-b">【get loud】</span>', html: true },
+      { text: 'So freak, 좀 거칠테니, <span class="mixx-b">watch out</span>', html: true },
+      { text: '두 발 앞의 한계선을 밟아, <span class="mixx-b">wow!</span>', html: true },
+      { text: '한 장 넘긴 page, 그어진 칸은 없어 <span class="mixx-b">(맘대로 채워가)</span>（空耳：馬ㄉㄟ囉 ㄘㄟ我嘎）', html: true },
+      { text: '낯선 길 앞에 두려움 따윈 거둬 <span class="mixx-b">(맞서보자고)</span>（空耳：馬搜po掐勾）', html: true },
+      { text: '우리가 새길 story (나나), 한 컷 한 컷 찍어 다, post it', cheer: false },
+      { text: '상상해 봐 우리가 만들 new wave, <span class="mixx-b">sway, yeah, yeah</span>', html: true },
+      { text: '어딘가 서투른 지금이 맘에 들어', cheer: false },
+      { text: '자유롭게<span class="mixx-b">【NMIXX!】</span> making my way 제멋대로', html: true },
+      { text: '장르가 없는 우리의 movie<span class="mixx-b">【movie】</span>', html: true },
+      { text: '단 한순간도 뻔하지 않아', cheer: false },
+      { text: '첫 등장 장면부터 climax <span class="mixx-b">(oops)</span>', html: true },
+      { text: 'Young, dumb, <span class="mixx-b">stupid</span>, young, dumb, <span class="mixx-b">stupid</span>', html: true },
+      { text: 'But who cares? (Young, dumb, stupid) but who cares? (Young, dumb, stupid)', cheer: false },
+      { text: '우린 겁이 없어 (but who cares?), do whatever we want (but who cares?)', cheer: false },
+      { text: '<span class="mixx-b">Ding Dang Dong</span> (우린 겁이 없어), <span class="mixx-b">Ding Dang Dong</span> (do whatever we want)', html: true },
+      { text: '몰라도 난 자신 있어, feel so cool', cheer: false },
+      { text: '더 멀리 가보는 거야 <span class="mixx-b">(Ding Dang Dong, Ding Dang Dong)</span>', html: true },
+      { text: 'Do whatever we want, <span class="mixx-b">NMIXX!</span>', html: true },
+      { text: 'Young and dumb, 못해낼 거라고', cheer: false },
+      { text: '떠들어, blah, blah, 준비해둬 popcorn', cheer: false },
+      { text: '매일, <span class="mixx-b">one, two, three</span>, 쌓이는 episode', html: true },
+      { text: '전부 <span class="mixx-b">펼칠게</span>（空耳：ㄆㄧㄡ七給）, 짜릿한 우리 flow', html: true },
+      { text: 'Brand new, 매 순간 처음인 듯', cheer: false },
+      { text: 'Fresh 한 my attitude, ooh', cheer: false },
+      { text: '날 얕본 시선 앞에, <span class="mixx-b">yeah, yeah, yeah</span>', html: true },
+      { text: '어딘가 서투른 지금이 맘에 들어', cheer: false },
+      { text: '자유롭게<span class="mixx-b">【Young and Dumb】</span>', html: true },
+      { text: 'making my way 제멋대로, one, two', cheer: false },
+      { text: '이 세상 앞에 더 크게, say cheese<span class="mixx-b">【say cheese】</span>', html: true },
+      { text: '우리의 색은 바래지 않아', cheer: false },
+      { text: '365 days 따르는 flashlight <span class="mixx-b">(oops)</span>', html: true },
+      { text: 'Young, dumb, <span class="mixx-b">stupid</span>, young, dumb, <span class="mixx-b">stupid</span>', html: true },
+      { text: 'But who cares? (Young, dumb, stupid) but who cares? (Young, dumb, stupid)', cheer: false },
+      { text: '우린 겁이 없어 (but who cares?), do whatever we want (but who cares?)', cheer: false },
+      { text: '<span class="mixx-b">Ding Dang Dong</span> (우린 겁이 없어), <span class="mixx-b">Ding Dang Dong</span> (do whatever we want)', html: true },
+      { text: '몰라도 난 자신 있어, feel so cool', cheer: false },
+      { text: '더 멀리 가보는 거야 <span class="mixx-b">(Ding Dang Dong, Ding Dang Dong)</span>', html: true },
+      { text: '두드려봐, knock-knock', cheer: false },
+      { text: '문을 열어봐, 가라앉은 맘을 깨워', cheer: false },
+      { text: '비켜, beep, beep', cheer: false },
+      { text: '과감하게 가 어때? 속도는 <span class="mixx-b">mach, mach</span>', html: true },
+      { text: '얼마든지, we can make it', cheer: false },
+      { text: '넘어지면 또 일어나', cheer: false },
+      { text: '무서울 게 없어 우린', cheer: false },
+      { text: '가장 큰 꿈을 꾸는, young and dumb (young and dumb, oh, whoa)', cheer: false },
+      { text: '【歡呼】', cheer: true },
+      { text: 'Young, dumb, <span class="mixx-b">stupid</span>, young, dumb, <span class="mixx-b">stupid</span>', html: true },
+      { text: 'But who cares? (Young, dumb, stupid) but who cares? (Young, dumb, stupid)', cheer: false },
+      { text: '우린 겁이 없어 (but who cares?), do whatever we want (but who cares?)', cheer: false },
+      { text: '<span class="mixx-b">Ding Dang Dong</span> (우린 겁이 없어), <span class="mixx-b">Ding Dang Dong</span> (do whatever we want)', html: true },
+      { text: '몰라도 난 자신 있어, feel so cool (yeah, yeah)', cheer: false },
+      { text: '더 멀리 가보는 거야 <span class="mixx-b">(Ding Dang Dong, Ding Dang Dong)</span>', html: true },
+      { text: 'Wait, I know what you want', cheer: false },
+      { text: '더 늦기 전에 너도 들어와', cheer: false },
+    ]},
+    'Break The Wall': { lines: [
+      { text: '< 影片 8:58 開始 >', cheer: false },
+      { text: 'NMIXX自編的應援 有應援動作！', cheer: true },
+      { text: 'Right now 끝없이 우리를 위해 펼쳐질 세상', cheer: false },
+      { text: "'Cause now we break all the walls", cheer: false },
+      { text: 'We break all the', cheer: false },
+      { text: '【break the wall】', cheer: true },
+      { text: '두 눈을 꼭 감고서 그려진', cheer: false },
+      { text: '마음 속 선명한 지도 위', cheer: false },
+      { text: 'Yeah 난 알아 where to go', cheer: false },
+      { text: '숨이 턱까지 차오르게 둘래 <span class="mixx-b">【둘래】</span>（空耳：突雷）', html: true },
+      { text: '더 힘껏 마주할래 넓혀 my space <span class="mixx-b">【my space】</span>', html: true },
+      { text: 'Be brave and wild 점점 더', cheer: false },
+      { text: 'Things get better', cheer: true },
+      { text: '네모난 천장의', cheer: false },
+      { text: '야광별 not my taste <span class="mixx-b">【Ewww】</span>', html: true },
+      { text: '찾아갈 거야 real star <span class="mixx-b">【NMIXX】</span>', html: true },
+      { text: "Why don't you? (you)", cheer: false },
+      { text: '시선은 far away', cheer: false },
+      { text: '망설임에게 인사를 건네', cheer: false },
+      { text: '고갤 드는 희망 속에 설레', cheer: false },
+      { text: 'Go all the way', cheer: false },
+      { text: 'Come and <span class="mixx-b">break the wall</span>', html: true },
+      { text: '다 무너뜨려 시작된 journey', cheer: false },
+      { text: '상상 <span class="mixx-b">너머의</span>（空耳：no謀ㄟ）', html: true },
+      { text: '꿈꿔왔던 세상 멀리', cheer: false },
+      { text: "Don't ever give up", cheer: true },
+      { text: '더 크게 외쳐 벅차는 이 <span class="mixx-b">떨림</span>（空耳：豆林）', html: true },
+      { text: '하나둘씩 모여 together', cheer: false },
+      { text: '【耶～】', cheer: true },
+      { text: '멈췄던 세상을 깨워 with you', cheer: false },
+      { text: '한 발짝 더 다가서는 찰나', cheer: false },
+      { text: '망설여진 건 당연해 아마', cheer: false },
+      { text: 'Call my name<span class="mixx-b">【now】</span>', html: true },
+      { text: 'I\'ll be there <span class="mixx-b">【sure】</span>', html: true },
+      { text: '함께일 때 한 걸음 디뎌 <span class="mixx-b">【Let\'s go!】</span>', html: true },
+      { text: 'I trust you, I trust myself', cheer: false },
+      { text: '벽 앞에 새길래 난 너와 내 everything', cheer: false },
+      { text: '더 깊게 간직해', cheer: false },
+      { text: '기억해둬 작은 용기를 낸 순간 <span class="mixx-b">【Okay】</span>', html: true },
+      { text: '투명한 온실의', cheer: false },
+      { text: '화분은 not my taste<span class="mixx-b">【Ewww】</span>', html: true },
+      { text: '바람을 가를 거야 <span class="mixx-b">【咻咻咻】</span>', html: true },
+      { text: "Why don't you? (you)", cheer: false },
+      { text: '더 멀리 far away', cheer: false },
+      { text: '두려움에게 인사를 건네 (ah)', cheer: false },
+      { text: '고갤 드는 희망 속에 설레', cheer: false },
+      { text: 'Go all the way', cheer: false },
+      { text: 'Come and <span class="mixx-b">break the wall</span>', html: true },
+      { text: '다 무너뜨려 시작된 journey', cheer: false },
+      { text: '상상 <span class="mixx-b">너머의</span>（空耳：no謀ㄟ）', html: true },
+      { text: '꿈꿔왔던 세상 멀리', cheer: false },
+      { text: "Don't ever give up", cheer: true },
+      { text: '더 크게 외쳐 벅차는 이 <span class="mixx-b">떨림</span>（空耳：豆林）', html: true },
+      { text: '하나둘씩 모여 together', cheer: false },
+      { text: '【耶～】', cheer: true },
+      { text: '멈췄던 세상을 깨워 with you', cheer: false },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: "Say it again, we can't get enough", cheer: false },
+      { text: '다 뒤흔들어', cheer: false },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: 'All over and over again', cheer: false },
+      { text: 'So we break all the walls', cheer: false },
+      { text: '【歡呼！】', cheer: true },
+      { text: '틈에 내린 저 햇빛처럼', cheer: false },
+      { text: '길이 돼 모든 건 oh love', cheer: false },
+      { text: '파돌 일으키는 butterfly', cheer: false },
+      { text: '더 큰 꿈을 꾸며 날아가', cheer: false },
+      { text: 'You and I (yeah)', cheer: false },
+      { text: '【拍手6次】', cheer: true },
+      { text: 'Come and break the wall', cheer: false },
+      { text: 'We gonna mix up 함께 만들 story', cheer: false },
+      { text: "Now it's time to change", cheer: false },
+      { text: 'Break all the, break all the walls', cheer: true },
+      { text: 'Come and <span class="mixx-b">break the wall</span>', html: true },
+      { text: '다 무너뜨려 시작된 journey', cheer: false },
+      { text: '상상 <span class="mixx-b">너머의</span>（空耳：no謀ㄟ）', html: true },
+      { text: '꿈꿔왔던 세상 멀리', cheer: false },
+      { text: "Don't ever give up", cheer: true },
+      { text: '더 크게 외쳐 벅차는 이 떨림', cheer: false },
+      { text: '하나둘씩 모여 together', cheer: false },
+      { text: '【耶～】', cheer: true },
+      { text: '멈췄던 세상을 깨워 with you', cheer: false },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: "Say it again, we can't get enough", cheer: false },
+      { text: '다 뒤흔들어', cheer: false },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: 'Hey, yeah, yeah, yeah', cheer: true },
+      { text: '꿈꿔왔던 세상이 보여', cheer: false },
+      { text: '멈춰 설 이유는 없어 with you', cheer: false },
+    ]},
+    'High Horse': { lines: [
+      { text: '< 影片 0:23 開始 >', cheer: false },
+      { text: "Sick of that high horse, I just can't take it no more", cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX】', cheer: true },
+      { text: "텅 빈 대화, I'm lost and found", cheer: false },
+      { text: '판단하지, what you are, 쉽게 말해, 다 who you are, oh, oh', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX】', cheer: true },
+      { text: "내 귀엔 their lies, I hear what's inside", cheer: false },
+      { text: "So let's ride to the front line", cheer: false },
+      { text: '갈 수 있는 가장 끝까지', cheer: false },
+      { text: '너와 더 멀리', cheer: false },
+      { text: "To end up where we're meant to be", cheer: false },
+      { text: 'Heartbreak, <span class="mixx-b">지겨워</span>（空耳：七gyo我）, 눈뜨기 싫은 every morning', html: true },
+      { text: 'Run away, 비좁은 frame', cheer: false },
+      { text: 'Heartbreak, <span class="mixx-b">지겨워</span>（空耳：七gyo我）, 눈뜨기 싫은 every morning', html: true },
+      { text: 'Run away, 비좁은 frame', cheer: false },
+      { text: '내려다보는 따가운 시선', cheer: false },
+      { text: '<span class="mixx-b">뛰어 넘어</span>（空耳：推喔 no某）, go on, go on', html: true },
+      { text: "They can't tell you what you are", cheer: false },
+      { text: 'If you already know who you are, oh, oh', cheer: false },
+      { text: '<span class="mixx-b">I will love you</span> when all is gone', html: true },
+      { text: "So let's ride to the front line", cheer: false },
+      { text: '갈 수 있는 가장 끝까지', cheer: false },
+      { text: '너와 더 멀리', cheer: false },
+      { text: "To end up where we're meant to be", cheer: false },
+      { text: "So let's ride to the front line", cheer: false },
+      { text: '익숙한 곳을 벗어나', cheer: false },
+      { text: '너와 있을게', cheer: false },
+      { text: '꿈꾼 적 없는 곳까지', cheer: false },
+      { text: 'Lights flash, <span class="mixx-b">bass drop</span>, baby, I\'m on whatever', html: true },
+      { text: 'Hands up, <span class="mixx-b">heartbeats</span>, no telling where I\'ll go', html: true },
+      { text: 'Heartquake, <span class="mixx-b">눈을 떠</span>（空耳：noon木豆）, 웅크렸던 every morning', html: true },
+      { text: 'Run away, do it my way', cheer: false },
+      { text: "Sick of that high horse, our minds don't work like theirs", cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+    "SPINNIN' ON IT": { lines: [
+      { text: '< 影片 0:22 開始 >', cheer: false },
+      { text: 'Love', cheer: false },
+      { text: '막혀버린 talk, iffy, iffy love war, iffy, iffy', cheer: false },
+      { text: "(I don't know what's wrong)", cheer: true },
+      { text: '예상한 boom, 언제나 ma-a-assive chaos, is it? Is it?', cheer: false },
+      { text: "(I don't know what's wrong)", cheer: true },
+      { text: '위험한 drift, 자꾸 부딪히는 너와 나 (oh-oh)', cheer: false },
+      { text: '내 안에 파편처럼 박힌 love and hate', cheer: false },
+      { text: '갈수록 지워지지가 않아', cheer: false },
+      { text: "(I don't know what's wrong)", cheer: true },
+      { text: '다툼 속의 our love, 아마 너와 난 loco', cheer: false },
+      { text: 'Why do I want you more? 오늘도 on and on, whoa (whoa)', cheer: false },
+      { text: '멈출 수 없는 chaos, 자꾸만 터지는 spark', cheer: false },
+      { text: '점점 더 going insane, should I keep loving you or not?', cheer: false },
+      { text: "(Yeah, we're stuck in here)", cheer: false },
+      { text: 'So done with love <span class="mixx-b">(so done with love)</span>', html: true },
+      { text: 'So done with hurt <span class="mixx-b">(so done with hurt)</span>', html: true },
+      { text: '끝없는 이 heartache <span class="mixx-b">(끝없는 이 heartache)</span>（空耳：跟偶嫩一heartache）', html: true },
+      { text: 'But you are all I need <span class="mixx-b">(but you are all I need)</span>', html: true },
+      { text: '이 뻔한 이야길 원해 더, 우린 여전히 서로겠지, whatever', cheer: false },
+      { text: '(say whatever)', cheer: true },
+      { text: 'See you tomorrow', cheer: false },
+      { text: 'we been <span class="mixx-b">spinnin\' on it, spinnin\' on it</span>', html: true },
+      { text: '(With hurt) we been <span class="mixx-b">spinnin\' on it, spinnin\' on it</span>', html: true },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin】', cheer: true },
+      { text: '(Heartache)', cheer: false },
+      { text: 'We been <span class="mixx-b">spinnin\' on it, spinnin\' on it</span>', html: true },
+      { text: 'You are my hero (hey) and villain (do it, do it)', cheer: false },
+      { text: '날 울린 뒤 씌운 (hey) umbrella (do it, do it)', cheer: false },
+      { text: '어긋나는 timing 속', cheer: false },
+      { text: '갇혀버려 너와 (yeah, do it, do it)', cheer: false },
+      { text: '붙어 있는 우린 like a bomb, 언제 터질지 몰라', cheer: false },
+      { text: '갈라지는 한숨 사이 말을 퍼부어', cheer: false },
+      { text: '숨이 막히지 (oh), 어딜 봐도 blackout', cheer: false },
+      { text: '혼란 속에 fall (fall)', cheer: false },
+      { text: '함정 같은 our love (ah, our love), 이 끝이 없는 Möbius (ooh)', cheer: false },
+      { text: "Oh, I'm feeling so lost", cheer: false },
+      { text: 'Should I keep loving you or not? (Ah, ah, oh, yeah)', cheer: false },
+      { text: "(Let's go, just gotta ride with me)", cheer: false },
+      { text: 'So done with love <span class="mixx-b">(so done with love)</span>', html: true },
+      { text: 'So done with hurt <span class="mixx-b">(so done with hurt)</span>', html: true },
+      { text: '끝없는 이 heartache <span class="mixx-b">(끝없는 이 heartache)</span>（空耳：跟偶嫩一heartache）', html: true },
+      { text: 'But you are all I need <span class="mixx-b">(but you are all I need)</span>', html: true },
+      { text: '이 뻔한 이야길 원해 더, 우린 여전히 서로겠지, whatever', cheer: false },
+      { text: '(say whatever)', cheer: true },
+      { text: "See you tomorrow (we been spinnin' on it, spinnin' on it)", cheer: false },
+      { text: '사소한 습관도 다른 너와 나 맞고 틀린 건 애초에 없지', cheer: false },
+      { text: "다투고 부딪혀, 그게 우리니까 together, we'll be (ooh)", cheer: false },
+      { text: 'Every day, every night, we on and on, 후회는 하지 않아', cheer: false },
+      { text: "So truly (so truly), we're endless (we're endless, ooh)", cheer: false },
+      { text: '【歡呼】', cheer: true },
+      { text: 'So done with love <span class="mixx-b">(so done with love)</span>', html: true },
+      { text: 'So done with hurt <span class="mixx-b">(so done with hurt)</span>', html: true },
+      { text: '끝없는 이 heartache <span class="mixx-b">(끝없는 이 heartache)</span>(空耳：跟偶嫩一heartache）', html: true },
+      { text: 'But you are all I need <span class="mixx-b">(but you are all I need)</span>', html: true },
+      { text: '이 뻔한 이야길 원해 더, 우린 여전히 서로겠지, whatever', cheer: false },
+      { text: '(ooh, <span class="mixx-b">say whatever</span>)', html: true },
+      { text: 'See you tomorrow', cheer: false },
+      { text: 'we been <span class="mixx-b">spinnin\' on it, spinnin\' on it</span>', html: true },
+      { text: '(So done with hurt, with hurt) we been <span class="mixx-b">spinnin\' on it, spinnin\' on it</span>', html: true },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin】', cheer: true },
+      { text: '(끝없는 이 heartache, heartache)', cheer: false },
+      { text: '(But you are all I need) we been <span class="mixx-b">spinnin\' on it, spinnin\' on it</span>', html: true },
+    ]},
+    'KNOW ABOUT ME': { lines: [
+      { text: '< 影片 0:30 開始 >', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX】', cheer: true },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, Know About Me】', cheer: true },
+      { text: "Go-go-gonna do it 'cause I want it, gonna move 'cause I want it", cheer: false },
+      { text: "Gonna love 'cause I want it, gonna run 'cause I want it", cheer: false },
+      { text: "Kill the doubt, I don't want it, kill the fear, I don't want it", cheer: false },
+      { text: "Kill the rule, I don't want it, want it (know about me)", cheer: false },
+      { text: 'I wanna drop my rhythm on your fear (ay)', cheer: false },
+      { text: '들켜도 좋아, everything you feel (ay-ay)', cheer: false },
+      { text: '본 적 없을테지, like that', cheer: false },
+      { text: '무모해도, like that <span class="mixx-b">love</span>', html: true },
+      { text: '예상을 깨고 흘려보는 틈 (보는 틈)', cheer: false },
+      { text: '제대로 건든 호기심의 끈 (ay)', cheer: false },
+      { text: '까딱인 고갯짓에 쉽게', cheer: false },
+      { text: '다른 너를 이끌어내, <span class="mixx-b">oh</span>', html: true },
+      { text: 'Would you dive with me', cheer: false },
+      { text: 'Dive with me, dive?', cheer: false },
+      { text: '놓치지 않게, eyes on me (hey, hey, hey)', cheer: false },
+      { text: 'Eyes on me now', cheer: false },
+      { text: '【NMIXX】', cheer: true },
+      { text: 'Let me show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (that\'s that)', html: true },
+      { text: 'Show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (yeah)', html: true },
+      { text: 'Won\'t let you down, down, 손을 잡아 <span class="mixx-b">【잡아】</span> (空耳：掐吧）', html: true },
+      { text: '날 믿고 다음 다음 step을 밟아 <span class="mixx-b">【밟아】</span> (空耳：拍吧）', html: true },
+      { text: 'Let me show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (know about me, that\'s that)', html: true },
+      { text: 'Show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (know about me)', html: true },
+      { text: 'Won\'t let you down, down, 손을 잡아 <span class="mixx-b">【잡아】</span> (空耳：掐吧）', html: true },
+      { text: '네 눈빛 닿아 닿아 뛰는 my heart <span class="mixx-b">【my heart】</span>(oh, ooh-whoa)', html: true },
+      { text: 'So what happened? 두 발이 붕 뜨게 만드는 <span class="mixx-b">blush</span>', html: true },
+      { text: 'Give you my heart and affection, 난 널 이끄는 <span class="mixx-b">pilot</span>', html: true },
+      { text: "We're gonna fly to the sky (fly), 중력을 타고 sway", cheer: false },
+      { text: 'Ride or die, let me take you there', cheer: true },
+      { text: 'Would you dive with me', cheer: false },
+      { text: 'Dive with me, dive? (Dive with me, dive)', cheer: false },
+      { text: '재촉해도 돼, eyes on me (eyes, eyes, eyes)', cheer: false },
+      { text: 'Eyes on me now (oh, run)', cheer: false },
+      { text: '【NMIXX】', cheer: true },
+      { text: 'Let me show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (that\'s that)', html: true },
+      { text: 'Show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (you should know about me, yeah)', html: true },
+      { text: 'Won\'t let you down, down, 손을 잡아 <span class="mixx-b">【잡아】</span> (空耳：掐吧）', html: true },
+      { text: '날 믿고 다음 다음 step을 밟아 <span class="mixx-b">【밟아】</span> (空耳：拍吧）(whoa)', html: true },
+      { text: 'Let me show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (know about me, that\'s that)', html: true },
+      { text: 'Show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (know about me)', html: true },
+      { text: 'Won\'t let you down, down, 손을 잡아 <span class="mixx-b">【잡아】</span> (空耳：掐吧）(eh)', html: true },
+      { text: '네 눈빛 닿아 닿아 뛰는 my heart <span class="mixx-b">【my heart】</span>', html: true },
+      { text: "Gonna do it 'cause I want it, gonna move 'cause I want it", cheer: false },
+      { text: "Gonna love 'cause I want it, gonna run 'cause I want it", cheer: false },
+      { text: "Kill the doubt, I don't want it, kill the fear, I don't want it", cheer: false },
+      { text: "Kill the rule, I don't want it, kill the end, I don't-", cheer: false },
+      { text: 'Go-go-gonna', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX】', cheer: true },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, Know About Me】', cheer: true },
+      { text: "do it 'cause I want it, gonna move 'cause I want it", cheer: false },
+      { text: "Gonna love 'cause I want it, gonna run 'cause I want it", cheer: false },
+      { text: "Kill the doubt, I don't want it, kill the fear, I don't want it", cheer: false },
+      { text: "Kill the rule, I don't want it, kill the end, I don't want it", cheer: false },
+      { text: 'Let me show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (that\'s that)', html: true },
+      { text: 'Show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (yeah, yeah, yeah)', html: true },
+      { text: '너와 내 time, mm-mm, 멈추지 마', cheer: false },
+      { text: 'I have no doubt, doubt, 이젠 알아', cheer: false },
+      { text: 'Let me show you that, show you that, mm-mm', cheer: false },
+      { text: '<span class="mixx-b">Know about me</span> (ooh, ooh, that\'s that)', html: true },
+      { text: 'Show you that, show you that, mm-mm', cheer: false },
+      { text: 'Know about me', cheer: true },
+      { text: '너와 내 time, mm-mm, 멈추지 마', cheer: false },
+      { text: '우리가 닿을 다음으로, dive now', cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+    'DICE': { lines: [
+      { text: '< 影片 8:07 開始 >', cheer: false },
+      { text: "Don't be afraid", cheer: false },
+      { text: '번쩍 뜬 눈을 깜빡 <span class="mixx-b">【NMIXX】</span> 머린 핑핑핑 돌아', html: true },
+      { text: '상상도 못한 drama <span class="mixx-b">【DICE】</span>', html: true },
+      { text: '첫 scene을 찍어볼 time (go, go)', cheer: false },
+      { text: '이제 곧 시작될 challenge, 아마 쉽지는 않겠지', cheer: false },
+      { text: '긴장해 팽팽하게, babe <span class="mixx-b">(vamos, amigos)</span>', html: true },
+      { text: 'Yeah-eh-eh-eh (I wanna go)', cheer: false },
+      { text: '무한히 펼쳐진 universe', cheer: false },
+      { text: '사-아-아-아이 (I wanna know)', cheer: false },
+      { text: '끌리는 card를 뒤집어', cheer: false },
+      { text: '고민은 nope, 어서 pick it', cheer: false },
+      { text: '일부터 N까지 <span class="mixx-b">선택해 봐</span>（空耳：松ㄊㄟ嘿鋪阿）', html: true },
+      { text: 'OO, 기대돼 나', cheer: false },
+      { text: 'Now, now, open it up (what a surprise)', cheer: false },
+      { text: '저 하늘 위를 <span class="mixx-b">surfin\'</span>', html: true },
+      { text: '이 바닷속을 <span class="mixx-b">flyin\'</span>', html: true },
+      { text: '모든 걸 펼쳐도 좋아, are you ready?', cheer: false },
+      { text: 'All in now, 시작해 봐', cheer: false },
+      { text: '과감하지만 태연하게, start it', cheer: false },
+      { text: 'Let-let-let\'s roll the <span class="mixx-b">dice, yeah</span>', html: true },
+      { text: '판도를 뒤집어 완전히', cheer: false },
+      { text: '던져봐, <span class="mixx-b">nice shot</span>', html: true },
+      { text: '운명은 이 손안에, babe', cheer: false },
+      { text: '눈앞에 열린 세상의 (yeah)', cheer: false },
+      { text: '우리를 기대해', cheer: false },
+      { text: 'So tell me what you want', cheer: false },
+      { text: 'Where you wanna go?', cheer: false },
+      { text: '<span class="mixx-b">NMIXX, change up</span> (let\'s go)', html: true },
+      { text: 'Big wave, big wave, 피하지 마 (hey)', cheer: false },
+      { text: 'Break it up, break it up, 맞서 어서', cheer: false },
+      { text: '헤엄쳐 더 높은 파도 위로', cheer: false },
+      { text: '좀 더 유연하게 trouble들을 dribble해 and pass it', cheer: false },
+      { text: 'Perfect ten보다 높은 number <span class="mixx-b">(number)</span>', html: true },
+      { text: '그 이상을 향해 jump up <span class="mixx-b">(jump up)</span>', html: true },
+      { text: '현실 같은 dream은 이젠 빠져나와', cheer: false },
+      { text: '깨어나도, 깨어나 더 수면 위를 날아, fly high', cheer: false },
+      { text: '【歡呼】', cheer: true },
+      { text: '그 누구도 가지 않은 미지의 camino', cheer: false },
+      { text: "So exciting, I'm so excited", cheer: false },
+      { text: '이 반전의, 반전의 반전을 기대해, babe', cheer: false },
+      { text: 'Would you go with me?', cheer: false },
+      { text: 'Let\'s roll the <span class="mixx-b">dice</span>', html: true },
+      { text: '저 구름 속을 <span class="mixx-b">divin\'</span>', html: true },
+      { text: '이 파도 위를 <span class="mixx-b">ridin\'</span>', html: true },
+      { text: '말이 좀 안 되면 어때? No more waiting', cheer: false },
+      { text: 'All in now, 다 걸어봐', cheer: false },
+      { text: '고민할 필요도 없어, go get it', cheer: false },
+      { text: "Put 'em up!", cheer: false },
+      { text: '【Lily, Oh Hae Won, Sull Yoon Ah, Bae Jin Sol, Kim Ji Woo, Jang Kyu Jin, DICE】', cheer: true },
+      { text: '(We go up!)', cheer: false },
+      { text: '(We, NMIXX!)', cheer: true },
+      { text: "Don't fall asleep no more", cheer: false },
+      { text: 'You should come on board', cheer: false },
+      { text: '서둘러 시간이 없어, babe', cheer: false },
+      { text: 'Let-let-let\'s roll the <span class="mixx-b">dice, yeah</span>', html: true },
+      { text: '함께 만들어가는 score', cheer: false },
+      { text: '좋았어, <span class="mixx-b">nice shot</span>', html: true },
+      { text: '따라잡을 수 없는 number', cheer: false },
+      { text: '상상을 뛰어넘을 세계', cheer: false },
+      { text: "Would you go with me? (Let's roll the dice)", cheer: false },
+      { text: '【歡呼】', cheer: true },
+    ]},
+    'TANK': { lines: [
+      { text: '< 影片 5:19 開始 >', cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin】', cheer: true },
+      { text: '【NMIXX Set go!】', cheer: true },
+      { text: "Who that? 이제야 벗겨지는 veil, thanks for waitin'", cheer: false },
+      { text: 'Hi there, 나를 보면 모두가 다 panic, 어때, 예상 외니?', cheer: false },
+      { text: '【Hey, Hey, Hey】', cheer: true },
+      { text: '시작합니다', cheer: false },
+      { text: '【NMIXX】', cheer: true },
+      { text: '(Hey) 처음엔 따끔할 겁니다', cheer: false },
+      { text: '(Hey, hey, hey) Yeah, 그런 눈동자', cheer: false },
+      { text: '(Hey) 나쁜 건 들키지 맙시다', cheer: false },
+      { text: '어디든지 사정거리 안 <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: '빨라지는 심장 소리 bomb <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: '망설이지 않는 play <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: '난 우회하지 않을래 <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'No, thanks, 좀 삐뚤다고 자를 대니', cheer: false },
+      { text: 'think about it', cheer: false },
+      { text: '넌 왜 그 속마음을 들켜 이미 freeze', cheer: false },
+      { text: '【Hey, Hey, Hey】', cheer: true },
+      { text: '지나갑니다', cheer: false },
+      { text: '【NMIXX】', cheer: true },
+      { text: '(Hey) 앞에서 막지는 맙시다', cheer: false },
+      { text: '(Hey, hey, hey) Yeah, 뻔한 거짓말', cheer: false },
+      { text: '(Hey) 멋대로 정하지 맙시다', cheer: false },
+      { text: '겁이 뭐야 돌격하는 type <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: '끝이 없는 황야를 갈라 <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: '밀려나지 않는 play <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: '난 후퇴하지 않을래 <span class="mixx-b">(like a tank, I\'ma)</span>', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'You can see it? 피어올라', cheer: false },
+      { text: '꿈꿔왔던 mirage', cheer: false },
+      { text: '비를 내려 이 사막에', cheer: false },
+      { text: '원하는 대로, 상상한 대로', cheer: false },
+      { text: 'Baby, tell me every wish, wish, wish, wish, wish', cheer: false },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span> I\'m so', html: true },
+      { text: 'Freaky fresh, fresh<span class="mixx-b">【Fresh】</span>I\'m so freaky', html: true },
+      { text: "(like a tank, I'ma)", cheer: true },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX, TANK】', cheer: true },
+      { text: '【歡呼】', cheer: true },
+    ]},
+    'Love Me Like This': { lines: [
+      { text: '< 影片 10:52 開始 >', cheer: false },
+      { text: 'Love me like this, love me like that', cheer: false },
+      { text: 'Love me like this and I love you right back', cheer: false },
+      { text: '뛰는 심장 소릴 따라가', cheer: false },
+      { text: '커지는 울림, oh my, oh my God', cheer: false },
+      { text: 'Oh yeah,<span class="mixx-b">【NMIXX】</span>', html: true },
+      { text: 'let me hear you say "Yeah" <span class="mixx-b">【따라가】</span>（空耳：搭拉嘎）', html: true },
+      { text: '숨겨놨던 맘속 deep blue sea', cheer: false },
+      { text: '꺼내 펼쳐봐 느껴지는 feels', cheer: false },
+      { text: 'Oh yeah, <span class="mixx-b">【NMIXX】</span>', html: true },
+      { text: 'don\'t run away, yeah <span class="mixx-b">【펼쳐봐】</span>（空耳：ㄆㄧㄡ 秋鋪阿）', html: true },
+      { text: '철로 만든 heart, 예쁜 꽃을 피워봐', cheer: false },
+      { text: '사막 속에 비를 내려봐 (uh-uh)', cheer: false },
+      { text: 'If you wanna be my lover, 닫힌 맘을 다 깨뜨려', cheer: false },
+      { text: 'If you wanna, wanna, <span class="mixx-b">wanna-wanna-wanna</span>', html: true },
+      { text: 'Show me your way', cheer: false },
+      { text: '어느 틈에 자라난 이끌림', cheer: false },
+      { text: '점을 이어, oh baby', cheer: false },
+      { text: '맘속 <span class="mixx-b">fireworks</span> (woo), 외쳐 <span class="mixx-b">higher hopes</span>', html: true },
+      { text: "눈을 맞춰, it's so easy, you just gotta", cheer: false },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that <span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that <span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that <span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this and I love you right back (right back)', cheer: false },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that <span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that <span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that <span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this and I love you right back', cheer: false },
+      { text: 'Oh, 큰 파도가 시작될 걸 (ride now)', cheer: false },
+      { text: 'Buckle up, ready, set, go <span class="mixx-b">(let\'s go!)</span>', html: true },
+      { text: '이 감정의 폭을 explore', cheer: false },
+      { text: '조금 더 거침없이, 빠져 이 fever <span class="mixx-b">【fever】</span>', html: true },
+      { text: '그 순간 가슴속에, 넘쳐난 flower <span class="mixx-b">【flower】</span>', html: true },
+      { text: '이미 움트고 있던 숨', cheer: false },
+      { text: '고장 난 네 맘속의 bloom, oh', cheer: false },
+      { text: 'Show me your way', cheer: false },
+      { text: '어느 틈에 연결된 piece of love (oh-oh)', cheer: false },
+      { text: '선을 따라가 baby', cheer: false },
+      { text: '번진 <span class="mixx-b">fireworks</span>, 펼친 <span class="mixx-b">higher hopes</span>', html: true },
+      { text: "손을 뻗어, it's so easy, you just gotta", cheer: false },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this and I love you right back', cheer: false },
+      { text: "(and I'll love you right back)", cheer: false },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this and I love you right back (yeah)', cheer: false },
+      { text: 'Can you see the paradise?', cheer: false },
+      { text: '감각들을 깨워봐', cheer: false },
+      { text: '끝내 찾은 missing <span class="mixx-b">piece</span>', html: true },
+      { text: '심장 속을 밝힌 <span class="mixx-b">peace</span>', html: true },
+      { text: '나를 향해 켜진 love', cheer: false },
+      { text: '결국 너를 향할 love', cheer: false },
+      { text: '너와 내 꿈이 이어져 커져갈 time', cheer: false },
+      { text: '(love me like this, love me like that)', cheer: false },
+      { text: '【歡呼】', cheer: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this and I love you right back', cheer: false },
+      { text: '【Lily, Oh Hae Won, Sull Yoon Ah, Bae Jin Sol, Kim Ji Woo, Jang Kyu Jin, NMIXX】', cheer: true },
+      { text: 'Love me like this, love me like that', cheer: false },
+      { text: 'Love me like this, love me like that', cheer: false },
+      { text: 'Love me like this, love me like that', cheer: false },
+      { text: 'Love me like this and I love you right back', cheer: false },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this<span class="mixx-b">【this】</span>, love me like that<span class="mixx-b">【that】</span>', html: true },
+      { text: 'Love me like this and I love you right back', cheer: false },
+    ]},
+    'Blue Valentine': { lines: [
+      { text: '< 影片 0:26 開始 >', cheer: false },
+      { text: "You'll always be my blue, ooh-ooh-ooh-ooh valentine", cheer: false },
+      { text: '(Blue valentine, blue valentine)', cheer: false },
+      { text: "You'll always be my blue, ooh-ooh-ooh-ooh valentine", cheer: false },
+      { text: '<span class="mixx-b">【Blue Valentine NMIXX】</span>(Blue valentine, blue valentine)', html: true },
+      { text: '식어버린 너의 색은 blue', cheer: false },
+      { text: '파랗게 멍이 든 my heart', cheer: false },
+      { text: '몇 번이고 덧이 나', cheer: false },
+      { text: '열이 나 lovesick, 이건 such a bad love', cheer: false },
+      { text: 'We <span class="mixx-b">fight</span>, we <span class="mixx-b">sigh</span>, and <span class="mixx-b">stop</span>', html: true },
+      { text: '붉게 타오르다 한순간에 식어가', cheer: false },
+      { text: 'Rewind, rewind, rewind', cheer: true },
+      { text: '언제 그랬냐는 듯이 또 서롤 찾아', cheer: false },
+      { text: '깊게 새긴 상처 비친 red blood', cheer: false },
+      { text: '부서진 forever, I can see it now,', cheer: false },
+      { text: 'can you <span class="mixx-b">【NMIXX】</span>see it now?', html: true },
+      { text: '우린 마치 broken glass on the ground', cheer: false },
+      { text: '돌이킬 수 없다 해도, we can figure it out', cheer: false },
+      { text: 'If this love is over, 다시 뛰어들어 난 (난, 난, 난)', cheer: false },
+      { text: "이 사랑은 colder, I'll keep the fire lit in mine", cheer: false },
+      { text: 'You\'ll always be my blue, ooh-ooh-ooh-ooh <span class="mixx-b">valentine</span>', html: true },
+      { text: '(Blue valentine, blue valentine)', cheer: false },
+      { text: 'You\'ll always be my blue, ooh-ooh-ooh-ooh <span class="mixx-b">valentine</span>', html: true },
+      { text: '(Blue valentine, blue valentine)', cheer: false },
+      { text: '식어도 타오르는 얼음 속 불꽃', cheer: false },
+      { text: '아무 겁도 없이 뻗어버린 손', cheer: false },
+      { text: 'Hot and <span class="mixx-b">icy</span>, but I <span class="mixx-b">like it</span>', html: true },
+      { text: 'It\'s so you <span class="mixx-b">(so you!)</span>', html: true },
+      { text: '바뀌어 맘의 weather 몰려온 cloud', cheer: false },
+      { text: '외로운 together, I can feel it now, can you feel it now?', cheer: false },
+      { text: 'Rollercoaster처럼 우린 정신없이 흔들려도', cheer: false },
+      { text: "돌아갈 걸 알아, so it (doesn't matter)", cheer: false },
+      { text: 'You might be my end game (yeah)', cheer: false },
+      { text: '대가로 얻은 worst pain (you might be)', cheer: false },
+      { text: 'If this love is over, 다시 뛰어들어 난 (난, 난, 난)', cheer: false },
+      { text: "이 사랑은 colder, I'll keep the fire lit in mine", cheer: false },
+      { text: 'You\'ll always be my blue, ooh-ooh-ooh-ooh <span class="mixx-b">valentine</span>', html: true },
+      { text: '(Blue valentine, blue valentine)', cheer: false },
+      { text: 'You\'ll always be my blue, ooh-ooh-ooh-ooh <span class="mixx-b">valentine</span>', html: true },
+      { text: '(Blue valentine, blue valentine)', cheer: false },
+      { text: '푸른', cheer: false },
+      { text: '(사랑) 사랑이란 bruise', cheer: false },
+      { text: '낫지는 않길', cheer: false },
+      { text: "'Cause it's you (yeah)", cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+      { text: 'If this love is over, 다시 뛰어들어 난 (난, 난, 난, 뛰어들어 난)', cheer: false },
+      { text: "이 사랑은 colder (colder, yeah), I'll keep the fire lit in mine", cheer: false },
+      { text: 'You\'ll always be my blue, ooh-ooh-ooh-ooh <span class="mixx-b">valentine</span>', html: true },
+      { text: '(Always be my blue valentine)', cheer: false },
+      { text: 'You\'ll always be my blue, ooh-ooh-ooh-ooh <span class="mixx-b">valentine</span>', html: true },
+      { text: '(Blue valentine, blue valentine)', cheer: false },
+      { text: "I'm falling over and over and over, ah-ah", cheer: false },
+      { text: '【Lily, Haewon, Sullyoon, Bae, Jiwoo, Kyujin, NMIXX】', cheer: true },
+      { text: "You're getting colder and colder and colder", cheer: false },
+      { text: 'Blue valentine', cheer: false },
+      { text: '【歡呼！！】', cheer: true },
+    ]},
+  };
+
+  /* ============================================================
+     歌單資料
+     youtube: 填入 YouTube 影片 ID（網址 ?v= 後面那段）
+              例如 'dQw4w9WgXcQ'，留空則顯示灰色佔位框
+  ============================================================ */
+  var SONGS = [
+    { section: 'Opening', songs: [
+      { num: '01', name: 'O.O',                       type: 'cheer',  youtube: 'o2ga3D1qtco' },
+      { num: '02', name: 'Phoenix',                   type: 'enjoy',  youtube: 'dgeH9vxwYss' },
+      { num: '03', name: 'Run For Roses',             type: 'cheer',  youtube: 'UZ1bjS4fqec' },
+      { num: '04', name: 'Soñar (Breaker)',           type: 'cheer',  youtube: 'Ob92euLB_xc' },
+      { num: '05', name: 'RICO',                      type: 'enjoy',  youtube: 'Jc_iytoDc7M' },
+      { num: '06', name: 'See that?',                 type: 'cheer',  youtube: 'DjFtO31z5U8' },
+      { num: '07', name: 'BOOM',                      type: 'enjoy',  youtube: 'Vd3jAK_kA0o' },
+      { num: '08', name: 'DASH',                      type: 'cheer',  youtube: '7jj8LC8xmnk' },
+    ]},
+    { section: 'Stage 2', songs: [
+      { num: '09', name: 'PAXXWORD',                  type: 'enjoy',  youtube: 'sLd0jl6zv80' },
+      { num: '10', name: 'Young, Dumb, Stupid',       type: 'cheer',  youtube: 'o2ga3D1qtco' },
+      { num: '11', name: 'Break The Wall',            type: 'cheer',  youtube: '4uZgPLfN-ao' },
+      { num: '12', name: 'Shape Of Love',             type: 'enjoy',  youtube: 'GrrMUB9D12g' },
+    ]},
+    { section: 'Stage 3', songs: [
+      { num: '13', name: 'High Horse',                type: 'cheer',  youtube: 'eisQPEisP7Y' },
+      { num: '14', name: 'Bae Kyujin dance break',    type: 'enjoy',  youtube: '', image: 'https://twnswer.com/wp-content/uploads/2026/05/NMIXX-Bae-Kyujin.jpg' },
+      { num: '15', name: "SPINNIN' ON IT",            type: 'cheer',  youtube: 'AF_wXC1ayG8' },
+      { num: '16', name: 'KNOW ABOUT ME',             type: 'cheer',  youtube: 'ShV1IWoZLOs' },
+      { num: '17', name: 'Red light sign, but we go', type: 'enjoy',  youtube: 'PtL6nkdYQtQ' },
+    ]},
+    { section: 'Stage 4', songs: [
+      { num: '18', name: 'PAPILLON',                  type: 'enjoy',  youtube: 'cC96_Mwj5tU' },
+      { num: '19', name: 'Slingshot',                 type: 'enjoy',  youtube: 'm-ds3t1QkKc' },
+      { num: '20', name: 'Reality Hurts',             type: 'enjoy',  youtube: 'y4LlcShv9xs' },
+      { num: '21', name: 'DICE',                      type: 'cheer',  youtube: 'o2ga3D1qtco' },
+      { num: '22', name: 'TANK',                      type: 'cheer',  youtube: 'o2ga3D1qtco' },
+      { num: '23', name: 'Love Me Like This',         type: 'cheer',  youtube: 'o2ga3D1qtco' },
+      { num: '24', name: 'Blue Valentine',            type: 'cheer',  youtube: 'd2M8fgXtzys' },
+    ]},
+    { section: 'Encore', songs: [
+      { num: 'E1', name: 'BEAT BEAT',                 type: 'encore', youtube: 'VBIDBjBoD8I' },
+      { num: 'E2', name: 'Funky Glitter Christmas',   type: 'encore', youtube: 'VeJZx_-rMwM' },
+      { num: 'E3', name: 'Moving On',                 type: 'encore', youtube: 'N5C8ofAOLiM' },
+      { num: 'E4', name: 'ADORE U',                   type: 'encore', youtube: '756xAsYT3T0' },
+    ]},
+  ];
+
+  var TAG = {
+    cheer:  { text: '應援',   cls: 'mixx-tag mixx-tag-cheer'  },
+    enjoy:  { text: '純享',   cls: 'mixx-tag mixx-tag-enjoy'  },
+    encore: { text: 'Encore', cls: 'mixx-tag mixx-tag-encore' },
+  };
+
+  /* ============================================================
+     Build song list
+  ============================================================ */
+  var listEl    = document.getElementById('mixxList');
+  var panelEl   = document.getElementById('mixxPanel');
+  var activeRow = null;
+
+  SONGS.forEach(function (group) {
+    var lbl = document.createElement('div');
+    lbl.className = 'mixx-section-label';
+    lbl.textContent = group.section;
+    listEl.appendChild(lbl);
+
+    group.songs.forEach(function (song) {
+      var row = document.createElement('div');
+      row.className = 'mixx-song-row';
+      var tag = TAG[song.type];
+      row.innerHTML =
+        '<span class="mixx-song-num">'  + song.num  + '</span>' +
+        '<span class="mixx-song-name">' + song.name + '</span>' +
+        '<span class="' + tag.cls + '">'+ tag.text  + '</span>';
+
+      row.addEventListener('click', function () {
+        if (activeRow) activeRow.classList.remove('mixx-active');
+        row.classList.add('mixx-active');
+        activeRow = row;
+        renderContent(song);
+
+        if (window.innerWidth <= 768) {
+          listEl.classList.remove('open');
+          document.getElementById('mixxToggle').textContent = '▾ 展開歌單';
+        }
+      });
+
+      listEl.appendChild(row);
+    });
+  });
+
+  /* ============================================================
+     Render right panel
+  ============================================================ */
+  function esc(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function imageHtml(src) {
+    return '<div class="mixx-image-wrap"><img src="' + esc(src) + '" alt="Bae Kyujin dance break"></div>';
+  }
+
+  function videoHtml(youtubeId) {
+    var inner = youtubeId
+      ? '<iframe src="https://www.youtube.com/embed/' + esc(youtubeId) + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+      : '<div class="mixx-video-ph"><span class="mixx-video-ph-icon">▶</span><span>YouTube 影片待嵌入</span></div>';
+    return '<div class="mixx-video-wrap">' + inner + '</div>';
+  }
+
+  function renderContent(song) {
+    var tag = TAG[song.type];
+    var html =
+      '<h2 class="mixx-panel-title">' + esc(song.name) + '</h2>' +
+      '<div class="mixx-panel-meta">' +
+        '<span class="' + tag.cls + '">' + tag.text + '</span>' +
+        '<span class="mixx-panel-num">' + song.num + '</span>' +
+      '</div>';
+
+    if (song.type !== 'cheer') {
+      html += song.image ? imageHtml(song.image) : videoHtml(song.youtube);
+      html +=
+        '<div class="mixx-no-cheer-box">' +
+          '<span class="mixx-no-cheer-icon">♪</span>' +
+          '<p class="mixx-no-cheer-text">這首歌沒有官方應援法<br>盡情享受現場演出就好！</p>' +
+        '</div>';
+    } else {
+      if (song.youtube) { html += videoHtml(song.youtube); }
+      var data = CHEER_DATA[song.name];
+      if (data && data.lines && data.lines.length) {
+        data.lines.forEach(function (line) {
+          if (line.html) {
+            html += '<div class="mixx-cheer-line">' + line.text + '</div>';
+          } else {
+            var cls = line.cheer ? 'mixx-cheer-line is-cheer' : 'mixx-cheer-line';
+            html += '<div class="' + cls + '">' + esc(line.text) + '</div>';
+          }
+        });
+      } else {
+        html += '<div class="mixx-no-cheer-box"><p class="mixx-no-cheer-text">（應援內容待填入）</p></div>';
+      }
+    }
+
+    panelEl.innerHTML = html;
+    panelEl.scrollTop = 0;
+  }
+
+  /* ============================================================
+     Mobile toggle
+  ============================================================ */
+  var toggleBtn = document.getElementById('mixxToggle');
+  toggleBtn.addEventListener('click', function () {
+    var isOpen = listEl.classList.toggle('open');
+    toggleBtn.textContent = isOpen ? '▴ 收合歌單' : '▾ 展開歌單';
+  });
+
+})();
+</script>
