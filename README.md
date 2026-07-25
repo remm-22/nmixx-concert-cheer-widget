@@ -36,12 +36,9 @@
 
 ## 檔案說明
 
-每個版本都有兩份檔案：
+每個版本一個檔案（`應援區XXX版-standalone.html`），可以直接雙擊在瀏覽器打開，或部署到 GitHub Pages 展示。
 
-- `應援區XXX版.html`：**WordPress 版**。設計成直接貼進 WordPress「自訂 HTML」區塊使用，字元編碼（charset）與版面寬度（viewport）由 WordPress 主題的 `<head>` 提供，所以檔案本身沒有這兩個設定。
-- `應援區XXX版-standalone.html`：**獨立瀏覽版**。額外包了 `<!DOCTYPE>`、`<meta charset="UTF-8">`、`<meta name="viewport">`，可以直接雙擊在瀏覽器打開，或部署到 GitHub Pages 展示，不會因為缺少這兩項設定而中文亂碼、手機版失效。
-
-> 這是實際測試後才發現的坑：獨立打開 WordPress 版檔案時，中文會變亂碼，手機版的收合選單也不會生效——因為瀏覽器在沒有 viewport 設定時，預設會用桌面版寬度（980px）渲染頁面，RWD 斷點永遠不會被觸發。
+這裡的檔案跟實際貼在 WordPress「自訂 HTML」區塊裡的版本有一點差異：多包了 `<!DOCTYPE>`、`<meta charset="UTF-8">`、`<meta name="viewport">`。原本貼到 WordPress 的版本不需要這幾行，因為字元編碼（charset）與版面寬度（viewport）已經由 WordPress 主題的 `<head>` 提供了；但獨立打開時少了這兩行，中文會變亂碼、手機版的收合選單也會失效——因為瀏覽器在沒有 viewport 設定時，預設會用桌面版寬度（980px）渲染頁面，RWD 斷點永遠不會被觸發。這是實際測試後才發現的坑，不是憑印象猜的。
 
 ## 技術重點
 
@@ -93,12 +90,9 @@ This tool was built iteratively across three rounds, driven by real usage needs:
 
 ## File Structure
 
-Each version ships as two files:
+Each version is a single file (`應援區XXX版-standalone.html`) that can be opened directly in a browser or deployed to GitHub Pages.
 
-- `應援區XXX版.html` — **WordPress version.** Meant to be pasted directly into a WordPress "Custom HTML" block; character encoding and viewport are provided by the WordPress theme's own `<head>`, so this file intentionally omits them.
-- `應援區XXX版-standalone.html` — **Standalone version.** Wraps the same content with `<!DOCTYPE>`, `<meta charset="UTF-8">`, and `<meta name="viewport">` so it can be opened directly in a browser or deployed to GitHub Pages without breaking.
-
-> This was a real bug found through testing, not a guess: opening the WordPress-version file standalone garbles the Chinese text and disables the mobile layout entirely — without a viewport meta tag, browsers default to a ~980px desktop-width viewport, so the mobile media query never fires.
+These files differ slightly from what's actually pasted into the WordPress "Custom HTML" block: they add `<!DOCTYPE>`, `<meta charset="UTF-8">`, and `<meta name="viewport">`. The WordPress-embedded version doesn't need these, since character encoding and viewport are already provided by the theme's own `<head>` — but without them here, the Chinese text garbles and the mobile layout breaks entirely, since browsers default to a ~980px desktop-width viewport without a viewport meta tag, so the mobile media query never fires. This was a real bug found through testing, not a guess.
 
 ## Technical Notes
 
