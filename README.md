@@ -49,7 +49,11 @@
 
 ## 關於歌詞內容
 
-頁面中部分歌曲附有完整韓文歌詞與應援法，僅作為粉絲練習用途，非商業使用。
+頁面中部分歌曲附有完整韓文歌詞與應援法，僅作為粉絲練習用途，非商業使用。這部分內容的著作權仍屬於原詞曲創作者與所屬經紀公司，不在下方程式碼授權範圍內。
+
+## 授權
+
+程式碼（HTML/CSS/JavaScript 架構）採用 [MIT License](LICENSE)，歡迎自由使用、修改、參考。
 
 ---
 
@@ -103,7 +107,11 @@ These files differ slightly from what's actually pasted into the WordPress "Cust
 
 ## On the Lyrics
 
-Some songs include full Korean lyrics and cheer annotations, for non-commercial fan-practice use only.
+Some songs include full Korean lyrics and cheer annotations, for non-commercial fan-practice use only. Copyright for this content remains with the original songwriters and their agency, and is not covered by the code license below.
+
+## License
+
+The code (HTML/CSS/JavaScript structure) is licensed under the [MIT License](LICENSE) — feel free to use, modify, or reference it.
 
 ---
 
